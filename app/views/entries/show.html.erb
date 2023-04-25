@@ -1,0 +1,6 @@
+<h1><%= @entry.text %></h1>
+<p><%= @entry.created_at.strftime("Created on %m/%d/%Y at %I:%M%p") %></p>
+
+<%= link_to "Edit Entry", edit_journal_entry_path(@journal, @entry) %>
+<%= link_to "Delete Entry", journal_entry_path(@journal, @entry),data: { turbo_method: :delete, confirm: 'Are you sure?' } %>
+<%= link_to "Back to Journal", journal_path(@journal) %>

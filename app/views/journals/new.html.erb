@@ -1,0 +1,11 @@
+<!-- app/views/journals/new.html.erb -->
+
+<h1>New Journal</h1>
+
+<%= form_with model: @journal, local: true do |form| %>
+  <%= form.label :name %>
+  <%= form.text_field :name %>
+  <%= form.submit "Create" %>
+<% end %>
+
+<%= link_to "Back", journals_path %>
