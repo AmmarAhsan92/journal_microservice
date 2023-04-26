@@ -1,0 +1,4 @@
+<%= form_with(model: [@journal, entry], data: { controller: "entries" }, class: "mb-3", id: "new_entry") do |f| %>
+  <%= f.text_area :text, class: "form-control", placeholder: "Enter text..." %>
+  <%= f.submit "Save Entry", class: "btn btn-primary" %>
+<% end %>

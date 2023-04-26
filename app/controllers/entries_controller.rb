@@ -1,54 +1,55 @@
 class EntriesController < ApplicationController
-  before_action :set_journal
-  before_action :set_entry, only: [:show, :edit, :update, :destroy]
-
-  def index
-    @entries = @journal.entries
-  end
-
-  def show
-  end
-
-  def new
-    @entry = @journal.entries.build
-  end
-
-  def edit
-  end
-
   def create
-    @entry = @journal.entries.build(entry_params)
+    @journal = Journal.find(params[:journal_id])
+    @entry = @journal.entries.new(entry_params)
 
-    if @entry.save
-      redirect_to @journal, notice: 'Entry was successfully created.'
-    else
-      render :new
+    respond_to do |format|
+      if @entry.save
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.append(
+            'journal-entries', partial: 'entries/entry', locals: { entry: @entry }
+          )
+          render turbo_stream: turbo_stream.replace(
+            'new-entry-form', partial: 'entries/new', locals: { journal: @journal, entry: Entry.new }
+          )
+        end
+      else
+        format.html { render 'journals/show' }
+      end
     end
   end
 
+  def edit
+    @journal = Journal.find(params[:journal_id])
+    @entry = @journal.entries.find(params[:id])
+  end
+
   def update
-    if @entry.update(entry_params)
-      redirect_to [@journal, @entry], notice: 'Entry was successfully updated.'
-    else
-      render :edit
+    @journal = Journal.find(params[:journal_id])
+    @entry = @journal.entries.find(params[:id])
+
+    respond_to do |format|
+      if @entry.update(entry_params)
+        format.turbo_stream { render turbo_stream: turbo_stream.replace(@entry) }
+      else
+        format.html { render :edit }
+      end
     end
   end
 
   def destroy
+    @journal = Journal.find(params[:journal_id])
+    @entry = @journal.entries.find(params[:id])
     @entry.destroy
-    redirect_to @journal, notice: 'Entry was successfully destroyed.'
+
+    respond_to do |format|
+      format.turbo_stream { render turbo_stream: turbo_stream.remove(@entry) }
+    end
   end
 
   private
-    def set_journal
-      @journal = Journal.find(params[:journal_id])
-    end
 
-    def set_entry
-      @entry = @journal.entries.find(params[:id])
-    end
-
-    def entry_params
-      params.require(:entry).permit(:text)
-    end
+  def entry_params
+    params.require(:entry).permit(:text)
+  end
 end

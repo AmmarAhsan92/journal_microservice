@@ -1,0 +1,10 @@
+<%= turbo_frame_tag dom_id(journal) do %>
+  <li><%= link_to journal.name, journal_path(journal) %></li>
+  <%= turbo_frame_tag dom_id(journal, :entries) do %>
+    <ul>
+      <% journal.entries.each do |entry| %>
+        <%= render partial: "entry", locals: { entry: entry, journal: journal } %>
+      <% end %>
+    </ul>
+  <% end %>
+<% end %>

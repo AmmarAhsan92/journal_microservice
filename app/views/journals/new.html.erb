@@ -2,7 +2,7 @@
 
 <h1>New Journal</h1>
 
-<%= form_with model: @journal, local: true do |form| %>
+<%= form_with model: @journal, url: journals_path, local: true do |form| %>
   <%= form.label :name %>
   <%= form.text_field :name %>
   <%= form.submit "Create" %>

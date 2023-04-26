@@ -1,12 +1,13 @@
-<h1>Journals</h1>
+<h1>Journalss</h1>
 
-<ul>
-  <% @journals.each do |journal| %>
-    <li>
-      <%= journal.name %>
-      <%= link_to "Show", journal %>
-    </li>
+<ul id="journals">
+  <%= turbo_stream_from "journals" do %>
+    <% @journals.reload.each do |journal| %>
+      <% debugger %>
+      <h1> hy</h1>
+      <%= render partial: "journal", locals: { journal: journal } %>
+    <% end %>
   <% end %>
 </ul>
 
-<%= link_to "New Journal", new_journal_path %>
+<%= link_to "New Journal", new_journal_path, class: "btn btn-primary" %>

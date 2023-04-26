@@ -1,50 +1,56 @@
 class JournalsController < ApplicationController
-  before_action :set_journal, only: [:show, :edit, :update, :destroy]
-
   def index
-
     @journals = Journal.all
-  end
-
-  def show
-  end
-
-  def new
     @journal = Journal.new
-  end
-
-  def edit
   end
 
   def create
     @journal = Journal.new(journal_params)
 
-    if @journal.save
-      redirect_to @journal, notice: 'Journal was successfully created.'
-    else
-      render :new
+    respond_to do |format|
+      if @journal.save
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.append(
+            'journals', partial: 'journals/journal', locals: { journal: @journal }
+          )
+          render turbo_stream: turbo_stream.replace(
+            'new-journal-form', partial: 'journals/new', locals: { journal: Journal.new }
+          )
+        end
+      else
+        format.html { render :index }
+      end
     end
   end
 
+  def edit
+    @journal = Journal.find(params[:id])
+  end
+
   def update
-    if @journal.update(journal_params)
-      redirect_to @journal, notice: 'Journal was successfully updated.'
-    else
-      render :edit
+    @journal = Journal.find(params[:id])
+
+    respond_to do |format|
+      if @journal.update(journal_params)
+        format.turbo_stream { render turbo_stream: turbo_stream.replace(@journal) }
+      else
+        format.html { render :edit }
+      end
     end
   end
 
   def destroy
+    @journal = Journal.find(params[:id])
     @journal.destroy
-    redirect_to journals_url, notice: 'Journal was successfully destroyed.'
+
+    respond_to do |format|
+      format.turbo_stream { render turbo_stream: turbo_stream.remove(@journal) }
+    end
   end
 
   private
-    def set_journal
-      @journal = Journal.find(params[:id])
-    end
 
-    def journal_params
-      params.require(:journal).permit(:name)
-    end
+  def journal_params
+    params.require(:journal).permit(:name)
+  end
 end
