@@ -1,0 +1,24 @@
+<div class="w-full">
+  <div class="mx-auto md:w-2/3 w-full flex">
+    <div class="mx-auto">
+      <%= render @journal %>
+
+      <%= link_to 'Back to journals', journals_path, class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
+    </div>
+  </div>
+
+  <% if notice.present? %>
+    <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-lg inline-block" id="notice"><%= notice %></p>
+  <% end %>
+
+  <div class="flex justify-between items-center">
+    <h1 class="font-bold text-4xl">Entries</h1>
+    <%= turbo_frame_tag Entry.new do %>
+      <%= link_to 'New Entry', new_journal_entry_path(@journal), class: "rounded-lg py-3 px-5 bg-blue-600 text-white block font-medium" %>
+    <% end %>
+  </div>
+
+  <div id="entries" class="min-w-full">
+    <%= render @journal.entries %>
+  </div>
+</div>

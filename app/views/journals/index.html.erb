@@ -1,13 +1,16 @@
-<h1>Journalss</h1>
-
-<ul id="journals">
-  <%= turbo_stream_from "journals" do %>
-    <% @journals.reload.each do |journal| %>
-      <% debugger %>
-      <h1> hy</h1>
-      <%= render partial: "journal", locals: { journal: journal } %>
-    <% end %>
+<div class="w-full">
+  <% if notice.present? %>
+    <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-lg inline-block" id="notice"><%= notice %></p>
   <% end %>
-</ul>
 
-<%= link_to "New Journal", new_journal_path, class: "btn btn-primary" %>
+  <div class="flex justify-between items-center">
+    <h1 class="font-bold text-4xl">Journals</h1>
+    <%= turbo_frame_tag Journal.new do %>
+      <%= link_to 'New Journal', new_journal_path, class: "rounded-lg py-3 px-5 bg-blue-600 text-white block font-medium" %>
+    <% end %>
+  </div>
+
+  <div id="journals" class="min-w-full">
+    <%= render @journals %>
+  </div>
+</div>

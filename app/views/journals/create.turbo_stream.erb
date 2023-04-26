@@ -1,0 +1,7 @@
+<%= turbo_stream.prepend "journals" do %>
+  <%= render @journal %>
+<% end %>
+
+<%= turbo_stream.replace "journal_form" do %>
+  <%= render "form", journal: Journal.new %>
+<% end %>

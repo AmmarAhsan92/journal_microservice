@@ -1,17 +1,11 @@
-<h1><%= @journal.name %></h1>
-
-<%= turbo_frame_tag dom_id(@journal, :entries) do %>
-  <ul>
-    <% @journal.entries.each do |entry| %>
-      <%= render partial: "entry", locals: { entry: entry, journal: @journal } %>
+<div class="mx-auto md:w-2/3 w-full flex">
+  <div class="mx-auto">
+    <% if notice.present? %>
+      <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-lg inline-block" id="notice"><%= notice %></p>
     <% end %>
-  </ul>
-<% end %>
 
-<%= link_to "New Entry", new_journal_entry_path(@journal), class: "btn btn-primary" %>
-<%= link_to "Edit Journal", edit_journal_path(@journal) %>
-<%= link_to "Delete Journal", @journal, method: :delete, data: { confirm: 'Are you sure?' } %>
+    <%= render @journal %>
 
-<%= turbo_frame_tag dom_id(@journal, :new_entry) do %>
-  <%= render partial: "form", locals: { journal: @journal, entry: @entry } %>
-<% end %>
+    <%= link_to 'Back to journals', journals_path, class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
+  </div>
+</div>

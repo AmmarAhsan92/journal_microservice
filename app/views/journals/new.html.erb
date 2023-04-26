@@ -2,10 +2,12 @@
 
 <h1>New Journal</h1>
 
-<%= form_with model: @journal, url: journals_path, local: true do |form| %>
-  <%= form.label :name %>
-  <%= form.text_field :name %>
-  <%= form.submit "Create" %>
-<% end %>
+<%= turbo_frame_tag @journal do %>
+  <div class="mx-auto md:w-2/3 w-full">
+  <h1 class="font-bold text-4xl">New journal</h1>
 
-<%= link_to "Back", journals_path %>
+  <%= render "form", journal: @journal %>
+
+  <%= link_to 'Back to articles', journals_path, class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
+  </div>
+<% end %>

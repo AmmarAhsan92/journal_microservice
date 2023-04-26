@@ -1,4 +1,22 @@
-<%= form_with(model: [@journal, entry], data: { controller: "entries" }, class: "mb-3", id: "new_entry") do |f| %>
-  <%= f.text_area :text, class: "form-control", placeholder: "Enter text..." %>
-  <%= f.submit "Save Entry", class: "btn btn-primary" %>
+<%= form_with(model: [@journal, @entry], class: "contents", id: "entry_form") do |form| %>
+  <% if @entry.errors.any? %>
+    <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-lg mt-3">
+      <h2><%= pluralize(@entry.errors.count, "error") %> prohibited this entry from being saved:</h2>
+
+      <ul>
+        <% @entry.errors.each do |error| %>
+          <li><%= entry.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="my-5">
+    <%= form.label :text %>
+    <%= form.text_area :text, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
+  </div>
+
+  <div class="inline">
+    <%= form.submit class: "rounded-lg py-3 px-5 bg-blue-600 text-white inline-block font-medium cursor-pointer" %>
+  </div>
 <% end %>

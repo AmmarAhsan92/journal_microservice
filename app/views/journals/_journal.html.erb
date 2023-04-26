@@ -1,10 +1,13 @@
-<%= turbo_frame_tag dom_id(journal) do %>
-  <li><%= link_to journal.name, journal_path(journal) %></li>
-  <%= turbo_frame_tag dom_id(journal, :entries) do %>
-    <ul>
-      <% journal.entries.each do |entry| %>
-        <%= render partial: "entry", locals: { entry: entry, journal: journal } %>
-      <% end %>
-    </ul>
+<%= turbo_frame_tag journal do %>
+  <p class="my-5">
+    <strong class="block font-medium mb-1">Title:</strong>
+    <%= journal.name %>
+  </p>
+
+  <% if action_name != "show" %>
+    <%= button_to "Destroy this journal",journal_path(journal), method: :delete,  class: "rounded-lg py-3 ml-2 px-5 bg-gray-100 inline-block font-medium"  %>
+    <%= link_to "Show this journal", journal_entries_path(journal), data: { turbo_frame: "_top" }, class: "rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
+    <%= link_to 'Edit this journal', edit_journal_path(journal), class: "rounded-lg py-3 ml-2 px-5 bg-gray-100 inline-block font-medium" %>
+    <hr class="mt-6">
   <% end %>
 <% end %>

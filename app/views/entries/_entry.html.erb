@@ -1,6 +1,12 @@
-<%= turbo_frame_tag dom_id(entry) do %>
-  <li><%= entry.text %></li>
-  <%= turbo_frame_tag dom_id(entry, :actions) do %>
-    <%= link_to "Delete", [journal, entry], method: :delete, data: { confirm: 'Are you sure?' } %>
+<%= turbo_frame_tag entry do %>
+  <p class="my-5">
+    <strong class="block font-medium mb-1">Title:</strong>
+    <%= entry.text %>
+  </p>
+
+  <% if action_name != "show" %>
+    <%= button_to "Destroy this entry",journal_entry_path(@journal, entry), method: :delete,  class: "rounded-lg py-3 ml-2 px-5 bg-gray-100 inline-block font-medium"  %>
+    <%= link_to 'Edit this entry', edit_journal_entry_path(@journal, entry), class: "rounded-lg py-3 ml-2 px-5 bg-gray-100 inline-block font-medium" %>
+    <hr class="mt-6">
   <% end %>
-</%>
+<% end %>

@@ -1,6 +1,12 @@
 class JournalsController < ApplicationController
+  before_action :set_journal, only: %i[ show edit update destroy ]
+
   def index
     @journals = Journal.all
+    @journal = Journal.new
+  end
+
+  def new
     @journal = Journal.new
   end
 
@@ -9,46 +15,45 @@ class JournalsController < ApplicationController
 
     respond_to do |format|
       if @journal.save
-        format.turbo_stream do
-          render turbo_stream: turbo_stream.append(
-            'journals', partial: 'journals/journal', locals: { journal: @journal }
-          )
-          render turbo_stream: turbo_stream.replace(
-            'new-journal-form', partial: 'journals/new', locals: { journal: Journal.new }
-          )
-        end
+        format.turbo_stream
+        format.html { redirect_to journals_url(@journal), notice: "Journal was successfully created." }
+        format.json { render :show, status: :created, location: @journal }
       else
-        format.html { render :index }
+        format.html { render :new, status: :unprocessable_entity }
+        format.json { render json: @journal.errors, status: :unprocessable_entity }
       end
     end
   end
 
-  def edit
-    @journal = Journal.find(params[:id])
-  end
-
   def update
-    @journal = Journal.find(params[:id])
-
     respond_to do |format|
       if @journal.update(journal_params)
-        format.turbo_stream { render turbo_stream: turbo_stream.replace(@journal) }
+        format.turbo_stream
+        format.html { redirect_to journals_url(@journal), notice: "Journal was successfully updated." }
+        format.json { render :show, status: :ok, location: @journal }
       else
-        format.html { render :edit }
+        format.html { render :edit, status: :unprocessable_entity }
+        format.json { render json: @article.errors, status: :unprocessable_entity }
       end
     end
   end
 
   def destroy
-    @journal = Journal.find(params[:id])
     @journal.destroy
 
     respond_to do |format|
-      format.turbo_stream { render turbo_stream: turbo_stream.remove(@journal) }
+      format.turbo_stream
+      format.html { redirect_to journals_url, notice: "Journal was successfully destroyed." }
+      format.json { head :no_content }
     end
+
   end
 
   private
+
+  def set_journal
+    @journal = Journal.find(params[:id])
+  end
 
   def journal_params
     params.require(:journal).permit(:name)
